@@ -1,4 +1,6 @@
 var http = require("http");
+var fs = require("fs");
+
 var server = http.createServer(function(req,res){
     // parametr res oznacza obiekt odpowiedzi serwera (response)
     // parametr req oznacza obiekt żądania klienta (request)
