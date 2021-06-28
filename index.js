@@ -1,6 +1,7 @@
 var http = require("http");
 var fs = require("fs");
 var socket = require("socket.io");
+var Datastore = require('nedb')
 
 var server = http.createServer(function (req, res) {
     // parametr res oznacza obiekt odpowiedzi serwera (response)
@@ -41,4 +42,38 @@ io.on("connection", function (socket) {
 
 server.listen(3000, function () {
     console.log("start serwera na porcie 3000")
+
+
+
+    // ********************************
+    //      Nedb test ---- https://www.npmjs.com/package/nedb
+    // ********************************
+    db = new Datastore({filename: 'static/bazy/test.db'})
+    db.loadDatabase(function (err) {    // Callback is optional
+        // Now commands will be executed
+        console.log("test: "+err);
+      });
+
+    var us = {
+        nazwa: "KSBW",
+        serwery: [
+            "TSSI",
+            "TALKER"
+        ]
+    }
+    db.find({nazwa:"KSBW"},function(err,docs){
+        console.log(docs);
+        if(docs.length == 0)
+        {
+            db.insert(us, function (err, newDoc) {   // Callback is optional
+                    // newDoc is the newly inserted document, including its _id
+                    // newDoc has no key called notToBeSaved since its value was undefined
+                    console.log("Nowy: " + newDoc["_id"])
+                });
+        }
+    })
+    
+
+    
+    
 });
