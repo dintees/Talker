@@ -44,18 +44,14 @@ server.listen(3000, function () {
     console.log("start serwera na porcie 3000")
 
 
-
-    // ********************************
-    //      Nedb test ---- https://www.npmjs.com/package/nedb
-    // ********************************
-    db = new Datastore({filename: 'static/bazy/test.db'})
+    db = new Datastore({filename: 'db/test.db'})
     db.loadDatabase(function (err) {    // Callback is optional
         // Now commands will be executed
         console.log("test: "+err);
       });
 
     var us = {
-        nazwa: "KSBW",
+        nazwa: "KPKSBW",
         serwery: [
             "TSSI",
             "TALKER"
