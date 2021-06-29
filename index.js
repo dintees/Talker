@@ -2,6 +2,48 @@ var http = require("http");
 var fs = require("fs");
 var socket = require("socket.io");
 var Datastore = require('nedb')
+var qs = require("querystring")
+var formidable = require('formidable');
+
+// *********************************************
+//      zmienne
+// *********************************************
+var db_users = new Datastore({ filename: 'db/users.db', autoload: true })
+
+function servResponse(req, res) {
+    var allData = "";
+
+    //kiedy przychodzą dane POSTEM, w postaci pakietów,
+    //łącza się po kolei do jednej zmiennej "allData"
+    // w poniższej funkcji nic nie modyfikujemy
+
+    req.on("data", function (data) {
+        console.log("data: " + data)
+        allData += data;
+    })
+
+    //kiedy przyjdą już wszystkie dane
+    //parsujemy je do obiektu "finish"
+    //i odsyłamy do przeglądarki
+
+    req.on("end", function (data) {
+        var finish = qs.parse(allData)
+        console.log(finish)
+        db_users.find(finish, function (err, docs) {
+            console.log(docs);
+            if (docs.length > 0) {
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.end("zalogowano");
+            }
+            else {
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.end("Błędny login lub hasło!");
+            }
+        })
+
+    })
+
+}
 
 var server = http.createServer(function (req, res) {
     // parametr res oznacza obiekt odpowiedzi serwera (response)
@@ -24,6 +66,28 @@ var server = http.createServer(function (req, res) {
             res.end(data);
         })
     }
+    else if (req.method == "POST") {
+        if (req.url == "/login")
+            servResponse(req, res)
+        else
+            if (req.url == "/obrazek_test") {
+                var form = new formidable.IncomingForm();
+                form.parse(req, function (err, fields, files) {
+                    var oldpath = files.filetoupload.path;
+                    var newpath = 'db/avatars/' + files.filetoupload.name;
+
+                    var rawData = fs.readFileSync(oldpath)
+                    fs.writeFile(newpath, rawData, function(err){
+                        if(err) console.log(err)
+                        res.end("wysłano plik");
+                    })
+                    // fs.rename(oldpath, newpath, function (err) {
+                    //     if (err) throw err;
+                    //     console.log("wczytano")
+                    // });
+                });
+            }
+    }
 })
 
 io = socket(server);
@@ -35,7 +99,7 @@ io.on("connection", function (socket) {
     })
 
     // socket.on("event", data => {
-        // console.log(data)
+    // console.log(data)
     // })
 })
 
@@ -44,11 +108,11 @@ server.listen(3000, function () {
     console.log("start serwera na porcie 3000")
 
 
-    db = new Datastore({filename: 'db/test.db'})
+    db = new Datastore({ filename: 'db/test.db' })
     db.loadDatabase(function (err) {    // Callback is optional
         // Now commands will be executed
-        console.log("test: "+err);
-      });
+        console.log("test: " + err);
+    });
 
     var us = {
         nazwa: "KPKSBW",
@@ -57,19 +121,18 @@ server.listen(3000, function () {
             "TALKER"
         ]
     }
-    db.find({nazwa:"KSBW"},function(err,docs){
+    db.find({ nazwa: "KSBW" }, function (err, docs) {
         console.log(docs);
-        if(docs.length == 0)
-        {
+        if (docs.length == 0) {
             db.insert(us, function (err, newDoc) {   // Callback is optional
-                    // newDoc is the newly inserted document, including its _id
-                    // newDoc has no key called notToBeSaved since its value was undefined
-                    console.log("Nowy: " + newDoc["_id"])
-                });
+                // newDoc is the newly inserted document, including its _id
+                // newDoc has no key called notToBeSaved since its value was undefined
+                console.log("Nowy: " + newDoc["_id"])
+            });
         }
     })
-    
 
-    
-    
+
+
+
 });
