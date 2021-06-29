@@ -32,8 +32,11 @@ function servResponse(req, res) {
         db_users.find(finish, function (err, docs) {
             console.log(docs);
             if (docs.length > 0) {
-                res.writeHead(200, { 'Content-Type': 'text/html' });
-                res.end("zalogowano");
+                fs.readFile("static/index.html", function (error, data) {
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                    res.end(data);
+                })
+                return finish[0]
             }
             else {
                 res.writeHead(200, { 'Content-Type': 'text/html' });
@@ -48,7 +51,7 @@ function servResponse(req, res) {
 var server = http.createServer(function (req, res) {
     // parametr res oznacza obiekt odpowiedzi serwera (response)
     // parametr req oznacza obiekt żądania klienta (request)
-
+    var user
     if (req.url == "/") {
         fs.readFile("static/index.html", function (error, data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
@@ -67,9 +70,10 @@ var server = http.createServer(function (req, res) {
         })
     }
     else if (req.method == "POST") {
-        if (req.url == "/login")
-            servResponse(req, res)
-        else
+        if (req.url == "/login") {
+            user = servResponse(req, res)
+            console.log("USER: " +  user);
+        } else
             if (req.url == "/obrazek_test") {
                 var form = new formidable.IncomingForm();
                 form.parse(req, function (err, fields, files) {
@@ -77,8 +81,8 @@ var server = http.createServer(function (req, res) {
                     var newpath = 'db/avatars/' + files.filetoupload.name;
 
                     var rawData = fs.readFileSync(oldpath)
-                    fs.writeFile(newpath, rawData, function(err){
-                        if(err) console.log(err)
+                    fs.writeFile(newpath, rawData, function (err) {
+                        if (err) console.log(err)
                         res.end("wysłano plik");
                     })
                     // fs.rename(oldpath, newpath, function (err) {
