@@ -4,11 +4,19 @@ var socket = require("socket.io");
 var Datastore = require('nedb')
 var qs = require("querystring")
 var formidable = require('formidable');
+var session = require("client-sessions");
 
 // *********************************************
 //      zmienne
 // *********************************************
 var db_users = new Datastore({ filename: 'db/users.db', autoload: true })
+
+var sessions = session({
+    cookieName: 'session',
+    secret: 'blargadeeblargblarg',
+    duration: 24 * 60 * 60 * 1000,
+    activeDuration: 1000 * 60 * 5
+});
 
 function servResponse(req, res) {
     var allData = "";
@@ -45,59 +53,76 @@ function servResponse(req, res) {
         })
 
     })
-
 }
 
 var server = http.createServer(function (req, res) {
     // parametr res oznacza obiekt odpowiedzi serwera (response)
     // parametr req oznacza obiekt żądania klienta (request)
-    var user
-    if (req.url == "/") {
-        fs.readFile("static/index.html", function (error, data) {
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(data);
-        })
-    } else if (req.url.indexOf("css") != -1) {
-        fs.readFile("static" + req.url, function (error, data) {
-            res.writeHead(200, { 'Content-Type': 'text/css' });
-            res.end(data);
-        })
-    }
-    else if (req.url.indexOf("js") != -1) {
-        fs.readFile("static" + req.url, function (error, data) {
-            res.writeHead(200, { 'Content-Type': 'application/js' });
-            res.end(data);
-        })
-    }
-    else if (req.method == "POST") {
-        if (req.url == "/login") {
-            user = servResponse(req, res)
-            console.log("USER: " +  user);
-        } else
-            if (req.url == "/obrazek_test") {
-                var form = new formidable.IncomingForm();
-                form.parse(req, function (err, fields, files) {
-                    var oldpath = files.filetoupload.path;
-                    var newpath = 'db/avatars/' + files.filetoupload.name;
+    sessions(req, res, function () {
+        // Obsługa sesji req.session.nazwa = "wartość"
+        if (req.session.login) {
+            console.log("Istnieje " + req.session.login)
+        } else {
+            console.log("Tworzę");
+            req.session.login = true;
+        }
 
-                    var rawData = fs.readFileSync(oldpath)
-                    fs.writeFile(newpath, rawData, function (err) {
-                        if (err) console.log(err)
-                        res.end("wysłano plik");
-                    })
-                    // fs.rename(oldpath, newpath, function (err) {
-                    //     if (err) throw err;
-                    //     console.log("wczytano")
-                    // });
-                });
-            }
-    }
+        var user
+        if (req.url == "/") {
+            fs.readFile("static/index.html", function (error, data) {
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.end(data);
+            })
+        } else if (req.url.indexOf("css") != -1) {
+            fs.readFile("static" + req.url, function (error, data) {
+                res.writeHead(200, { 'Content-Type': 'text/css' });
+                res.end(data);
+            })
+        }
+        else if (req.url.indexOf("js") != -1) {
+            fs.readFile("static" + req.url, function (error, data) {
+                res.writeHead(200, { 'Content-Type': 'application/js' });
+                res.end(data);
+            })
+        }
+        else if (req.method == "POST") {
+            if (req.url == "/login") {
+                user = servResponse(req, res)
+                console.log("USER: " + user);
+            } else
+                if (req.url == "/obrazek_test") {
+                    var form = new formidable.IncomingForm();
+                    form.parse(req, function (err, fields, files) {
+                        var oldpath = files.filetoupload.path;
+                        var newpath = 'db/avatars/' + files.filetoupload.name;
+
+                        var rawData = fs.readFileSync(oldpath)
+                        fs.writeFile(newpath, rawData, function (err) {
+                            if (err) console.log(err)
+                            res.end("wysłano plik");
+                        })
+                        // fs.rename(oldpath, newpath, function (err) {
+                        //     if (err) throw err;
+                        //     console.log("wczytano")
+                        // });
+                    });
+                }
+        }
+    })
 })
 
 io = socket(server);
 
 io.on("connection", function (socket) {
     console.log("The client has connected!");
+    socket.on("login", function (data) {
+        console.log(data)
+        // czy taki użytkownik ustnieje
+
+        // req.session
+        socket.emit("login", { success: true });
+        // socket.emit("login", {success: false, comment: "Bad username or password"});
+    })
     socket.on("disconnect", function () {
         console.log("The client has disconnected!");
     })
@@ -110,8 +135,6 @@ io.on("connection", function (socket) {
 
 server.listen(3000, function () {
     console.log("start serwera na porcie 3000")
-
-
     db = new Datastore({ filename: 'db/test.db' })
     db.loadDatabase(function (err) {    // Callback is optional
         // Now commands will be executed
@@ -135,8 +158,5 @@ server.listen(3000, function () {
             });
         }
     })
-
-
-
 
 });

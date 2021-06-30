@@ -1,15 +1,18 @@
+var socket = io();
+
 window.onload = function () {
     console.log("Załadowano");
 
-    var socket = io();
 
     socket.on("connect", () => {
         // client has connected
 
+        socket.on("login", function(data) {
+            console.log(data)
+        })
+
         // socket.emit("test", "Ala ma kota")
-
     })
-
 }
 //https://jsfiddle.net/SupunKavinda/vfxdwtpc/1/
 function allowDrop(ev) {
