@@ -6,6 +6,7 @@ var qs = require("querystring")
 var formidable = require('formidable');
 var session = require("client-sessions");
 
+var soc = require('./server/socket.js')
 // *********************************************
 //      zmienne
 // *********************************************
@@ -131,7 +132,7 @@ io.on("connection", function (socket) {
     // console.log(data)
     // })
 })
-
+///io.on("connection", soc.socket_connection)
 
 server.listen(3000, function () {
     console.log("start serwera na porcie 3000")
