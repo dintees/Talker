@@ -6,7 +6,7 @@ var qs = require("querystring")
 var formidable = require('formidable');
 var session = require("client-sessions");
 
-var soc = require('./server/socket.js')
+//var soc = require('./server/socket.js')
 // *********************************************
 //      zmienne
 // *********************************************
@@ -62,9 +62,9 @@ var server = http.createServer(function (req, res) {
     sessions(req, res, function () {
         // Obsługa sesji req.session.nazwa = "wartość"
         if (req.session.login) {
-            console.log("Istnieje " + req.session.login)
+            //console.log("Istnieje " + req.session.login)
         } else {
-            console.log("Tworzę");
+            //console.log("Tworzę");
             req.session.login = true;
         }
 
@@ -113,9 +113,21 @@ var server = http.createServer(function (req, res) {
 })
 
 io = socket(server);
-
+// io.use(function (socket, next){
+//     session(socket.request,{},next)
+// })
+var data = new Map();
 io.on("connection", function (socket) {
     console.log("The client has connected!");
+    //const ses = socket.request.session;
+    //ses.connections++;
+    //ses.save();
+    //console.log(ses);
+    data.set(socket.id,{test:""})
+    //
+    var dd = data.get(socket.id)
+    dd.test += "1"
+    console.log(data.get(socket.id))
     socket.on("login", function (data) {
         console.log(data)
         // czy taki użytkownik ustnieje
@@ -126,6 +138,7 @@ io.on("connection", function (socket) {
     })
     socket.on("disconnect", function () {
         console.log("The client has disconnected!");
+        data.delete(socket.id)
     })
 
     // socket.on("event", data => {
