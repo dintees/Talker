@@ -3,37 +3,45 @@ var socket = require("socket.io");
 var data = new Map();
 
 module.exports = class Socket {
-    static io
+    io
     constructor(server) {
-        init(server)
+
+        this.init(server)
     }
 
-    static init(server)
-    {
+    init(server) {
         var io = socket(server)
-        io.on("connection", Socket.connection)
+        io.on("connection", this.connection.bind(this))
 
-        Socket.io = io
+        this.io = io
     }
-    static connection(socket) {
+    // wersja bez bind -> this.connection(this)
+    // connection(that) {
+    //     return function(socket)
+    //     {
+    //         console.log("The client has connected!");
+    //         socket.on("login", that.login(socket))
+    //         socket.on("disconnect", that.disconnect)
+    //     }
+    // }
+    connection(socket) {
         console.log("The client has connected!");
-        socket.on("login", Socket.login(socket))
-        socket.on("disconnect", Socket.disconnect)
-    }
+        socket.on("login", this.login(socket))
+        socket.on("disconnect", this.disconnect)
 
-    static login(socket) {
-        return function(data)
-        {
+    }
+    login(socket) {
+        return function (data) {
             console.log(data)
             // czy taki użytkownik ustnieje
-    
+
             // req.session
             socket.emit("login", { success: true });
             // socket.emit("login", {success: false, comment: "Bad username or password"});
         }
     }
 
-    static disconnect() {
+    disconnect() {
         console.log("The client has disconnected!");
     }
 }

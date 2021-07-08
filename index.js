@@ -10,8 +10,8 @@ var Server = require("./server/server")
 var Socket = require("./server/socket")
 
 var server = new Server();
-//var socket = new Socket(server.server);
-Socket.init(server.server)
+var socket = new Socket(server.server);
+//Socket.init(server.server)
 //var soc = require('./server/socket.js')
 // *********************************************
 //      zmienne
