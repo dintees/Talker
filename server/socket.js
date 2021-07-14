@@ -1,9 +1,10 @@
 var socket = require("socket.io");
-
-var data = new Map();
+var Datastore = require('nedb')
 
 module.exports = class Socket {
     io
+    data = new Map()
+    db_users = new Datastore({ filename: 'db/users.db', autoload: true })
     constructor(server) {
 
         this.init(server)
@@ -31,12 +32,24 @@ module.exports = class Socket {
 
     }
     login(socket) {
+        let tab = this.data
+        let db_users = this.db_users
         return function (data) {
             console.log(data)
-            // czy taki użytkownik ustnieje
-
+            // czy taki użytkownik ustniejes
+            db_users.find({login: data.login, password: data.password}, function (err, docs) {
+                console.log(docs);
+                if (docs.length > 0) {
+                    tab.set(docs[0]._id,docs[0]);
+                    console.log(tab)
+                    socket.emit("login", { success: true });
+                }
+                else {
+                    socket.emit("login", { success: false });
+                }
+            })
             // req.session
-            socket.emit("login", { success: true });
+            
             // socket.emit("login", {success: false, comment: "Bad username or password"});
         }
     }

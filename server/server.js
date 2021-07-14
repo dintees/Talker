@@ -2,6 +2,7 @@ const http = require("http");
 const fs = require("fs");
 const formidable = require('formidable');
 const session = require("client-sessions");
+var qs = require("querystring")
 
 var sessions = session({
     cookieName: 'session',
@@ -28,20 +29,20 @@ function servResponse(req, res) {
     req.on("end", function (data) {
         var finish = qs.parse(allData)
         console.log(finish)
-        db_users.find(finish, function (err, docs) {
-            console.log(docs);
-            if (docs.length > 0) {
-                fs.readFile("static/index.html", function (error, data) {
-                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end(data);
-                })
-                return finish[0]
-            }
-            else {
-                res.writeHead(200, { 'Content-Type': 'text/html' });
-                res.end("Błędny login lub hasło!");
-            }
-        })
+        // db_users.find(finish, function (err, docs) {
+        //     console.log(docs);
+        //     if (docs.length > 0) {
+        //         fs.readFile("static/index.html", function (error, data) {
+        //             res.writeHead(200, { 'Content-Type': 'text/html' });
+        //             res.end(data);
+        //         })
+        //         return finish[0]
+        //     }
+        //     else {
+        //         res.writeHead(200, { 'Content-Type': 'text/html' });
+        //         res.end("Błędny login lub hasło!");
+        //     }
+        // })
 
     })
 }

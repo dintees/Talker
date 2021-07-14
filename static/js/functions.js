@@ -1,5 +1,5 @@
 function signIn(e) {
-    e.preventDefault();
+    //e.preventDefault();
     var login = document.getElementById("login");
     var password = document.getElementById("password");
 
