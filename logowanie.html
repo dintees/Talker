@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<script src="script.js"></script>
+	<title>Strona Główna</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="css/0.css">
+	<link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet"> 
+
+    <style>
+    body{
+      background-color: #3b5998;
+    }
+    </style>
+</head>
+<body>
+    <div style="min-height:97vh">
+
+        <div id="pojemnik">   
+            <div id="baner">
+            <h1 id="ttt">My Book</h1>
+        
+                  <br>
+           
+
+
+            </div>    
+            <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+ 
+
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#"><span class="glyphicon glyphicon-user"></span>Rejestracja</a></li>
+      <li class="active"><a href="#"><span class="glyphicon glyphicon-log-in"></span>Logowanie</a></li>
+    </ul>
+  </div>
+</nav>
+        </div>
+
+        <div class="row justify-content-center" style="margin-left:30%;margin-right:30%;">
+            <form action="register.php" method="post">
+                 
+              <div class="form-group">
+              <div class="form-group">
+                    <label for="przykladowyLogin">Login/Email</label>
+                    <input type="text" class="form-control" name="login" placeholder="Wpisz Login">
+                    <small id="podpowiedzEmail" class="form-text text-muted">W powyższym polu wpisujesz swój login.</small>
+                  </div>
+              <div class="form-group">
+                <label for="przykladoweHaslo">Hasło</label>
+                <input type="password" class="form-control" name="haslo" placeholder="Wpisz hasło">
+              </div>
+    
+              <input type="submit" class="btn btn-primary" name="send" value="Zaloguj się">
+              <input type="submit" class="btn btn-primary" name="send" value="Nie pamiętam hasła">
+              
+            </form>
+            </div>
+        </div>
+    </div>
+<footer class="page-footer font-small blue min-vh-100">
+
+<!-- Copyright -->
+<div class="footer-copyright text-center py-3">© 2021 Krzysztof Szarek
+ 
+</div>
+<!-- Copyright -->
+
+</footer>
+</body>
+</html>
