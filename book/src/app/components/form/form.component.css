@@ -1,0 +1,16 @@
+:host {
+    flex-direction: column;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+    margin-top: 10%;
+  }
+
+  mat-form-field{
+    width: 15vw;
+  }
+
+  a{
+    text-decoration: none;;
+  }
+  
