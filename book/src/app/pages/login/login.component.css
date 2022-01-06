@@ -1,0 +1,18 @@
+:host{
+    flex-direction: column;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+  }
+
+mat-form-field:first-of-type{
+    margin-top: 10%;
+  }
+
+mat-form-field{
+    width: 15vw;
+}  
+
+app-top{
+    width: 100%;    
+}
