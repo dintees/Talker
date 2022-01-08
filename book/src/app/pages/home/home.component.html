@@ -1,0 +1,29 @@
+
+    
+<mat-toolbar>
+    <span>
+
+        <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+            <mat-icon *ngIf="!sidenav.opened">
+                menu
+            </mat-icon>
+            <mat-icon *ngIf="sidenav.opened">
+                close
+            </mat-icon>
+        </button>
+
+        Talker
+    </span>
+    </mat-toolbar>
+
+
+
+  <mat-sidenav-container (click)="sidenav.toggle()">
+    
+    <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8"  [fixedInViewport]="true">
+        Znajomi 
+        
+    </mat-sidenav>
+  
+</mat-sidenav-container>
+

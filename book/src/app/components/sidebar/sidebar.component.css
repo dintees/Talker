@@ -1,0 +1,9 @@
+mat-sidenav{
+    background: blue;
+    margin: 15px;
+    width:200px;
+    margin-top: 80px;
+}
+mat-sidenav-container{
+    height: calc(100vh-65px);
+}
