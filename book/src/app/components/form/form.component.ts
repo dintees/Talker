@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 
 @Component({
   selector: 'app-form',
@@ -20,9 +20,22 @@ export class FormComponent implements OnInit {
     return this.email.hasError('email') ? 'Niepoprawny email' : '';
   }
 
-  constructor() { }
+  public registerForm !: FormGroup;
+
+  constructor(private formBuilder : FormBuilder) { }
 
   ngOnInit(): void {
+    this.registerForm = this.formBuilder.group({
+      login: [''],
+      email: [''],
+      password: [''],
+      password2: [''],
+      'action': ['register']
+    })
+  }
+  
+  register(){
+    console.log(this.registerForm.value)
   }
 
 }

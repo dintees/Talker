@@ -1,12 +1,13 @@
 <app-top></app-top>
+<form [formGroup]="loginForm" (ngSubmit) = "login()">
 <mat-form-field appearance="fill">
-    <input matInput matNativeControl placeholder="Wpisz swój login">
+    <input formControlName="login" matInput matNativeControl placeholder="Wpisz swój login">
     <mat-label>Login/Email</mat-label>
 </mat-form-field>
 
 <mat-form-field appearance="fill">
     <mat-label>Hasło</mat-label>
-    <input matInput [type]="hide ? 'password' : 'text'">
+    <input formControlName="password" matInput [type]="hide ? 'password' : 'text'">
     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
@@ -14,6 +15,7 @@
 
 
 <button mat-raised-button color="primary">Zaloguj się</button>
+</form>
 <br>
 <a routerLink=''>Nie masz konta? Zarejestruj się</a>
 

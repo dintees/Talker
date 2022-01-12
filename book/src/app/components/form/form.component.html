@@ -1,17 +1,18 @@
+<form [formGroup]="registerForm" (ngSubmit) = "register()">
 <mat-form-field appearance="fill">
-    <input matInput matNativeControl placeholder="Wpisz swój login">
+    <input formControlName="login" matInput matNativeControl placeholder="Wpisz swój login">
     <mat-label>Login</mat-label>
 </mat-form-field>
 
 <mat-form-field appearance="fill">
     <mat-label>Wpisz swój Email</mat-label>
-    <input matInput placeholder="jan@kowalski.pl" [formControl]="email" required>
+    <input formControlName="email" matInput placeholder="jan@kowalski.pl" [formControl]="email" required>
     <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
   </mat-form-field>
 
 <mat-form-field appearance="fill">
     <mat-label>Hasło</mat-label>
-    <input matInput [type]="hide ? 'password' : 'text'">
+    <input formControlName="password" matInput [type]="hide ? 'password' : 'text'">
     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
@@ -19,11 +20,13 @@
 
 <mat-form-field appearance="fill">
     <mat-label>Potwierdź hasło</mat-label>
-    <input matInput [type]="hide ? 'password' : 'text'">
+    <input formControlName="password2" matInput [type]="hide ? 'password' : 'text'">
     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
 </mat-form-field>
-<button mat-raised-button color="primary">Zarejestruj się</button>
+
+<button mat-raised-button color="primary" onc>Zarejestruj się</button>
+</form>
 <br>
-<a routerLink='login'>Masz już konto? Zarejestruj się</a>
+<a routerLink='login'>Masz już konto? Zaloguj się</a>

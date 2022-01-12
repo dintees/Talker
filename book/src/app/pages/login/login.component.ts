@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -20,10 +20,20 @@ export class LoginComponent implements OnInit {
     return this.email.hasError('email') ? 'Niepoprawny email' : '';
   }
 
+  public loginForm !: FormGroup
 
-  constructor() { }
+  constructor(private formBuilder : FormBuilder) { }
 
   ngOnInit(): void {
+    this.loginForm = this.formBuilder.group({
+      login: [''],
+      password: [''],
+      'action': ['login']
+    })
+  }
+
+  login(){
+    console.log(this.loginForm.value)
   }
 
 }

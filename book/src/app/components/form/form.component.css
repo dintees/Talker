@@ -14,3 +14,9 @@
     text-decoration: none;;
   }
   
+  form{
+    flex-direction: column;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+  }
