@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-form',
@@ -7,6 +8,7 @@ import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit {
+
 
   hide = true;
 
@@ -22,7 +24,7 @@ export class FormComponent implements OnInit {
 
   public registerForm !: FormGroup;
 
-  constructor(private formBuilder : FormBuilder) { }
+  constructor(private formBuilder : FormBuilder, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
@@ -36,6 +38,7 @@ export class FormComponent implements OnInit {
   
   register(){
     console.log(this.registerForm.value)
+    this.http.post<any>('/query', JSON.stringify(this.registerForm.value)).subscribe()
   }
 
 }

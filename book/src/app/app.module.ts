@@ -25,6 +25,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDividerModule} from '@angular/material/divider';
 
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -52,7 +54,8 @@ import {MatDividerModule} from '@angular/material/divider';
     BrowserAnimationsModule,
     MatGridListModule,
     MatSidenavModule,
-    MatDividerModule
+    MatDividerModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

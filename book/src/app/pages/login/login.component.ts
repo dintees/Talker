@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,7 @@ export class LoginComponent implements OnInit {
 
   public loginForm !: FormGroup
 
-  constructor(private formBuilder : FormBuilder) { }
+  constructor(private formBuilder : FormBuilder, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -34,6 +35,7 @@ export class LoginComponent implements OnInit {
 
   login(){
     console.log(this.loginForm.value)
+    this.http.post<any>('/query', JSON.stringify(this.loginForm.value)).subscribe()
   }
 
 }
