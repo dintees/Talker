@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
     .set('Accept', 'application/json');
 
     console.log(this.loginForm.value)
-    this.http.post<any>('/api/query', JSON.stringify(this.loginForm.value),{headers: headers})
+    this.http.post<any>('/api/query', JSON.stringify(this.loginForm.value),{headers: headers}).subscribe()
   }
 
 }
