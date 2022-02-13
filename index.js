@@ -11,11 +11,7 @@ app.use(bodyParser.json());
 
 app.post('/query', (req, res) => {
     console.log(req.body)
-    let obj = {
-        action: req.body.action,
-        success: true,
-        message: "OK"
-    }
+    let obj = { action: req.body.action, success: true, message: "OK" }
     res.send(obj)
 })
 
