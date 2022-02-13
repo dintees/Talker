@@ -37,8 +37,7 @@ export class LoginComponent implements OnInit {
 
   login(){
 
-    const headers = new HttpHeaders()
-    .set('Accept', 'application/json');
+    const headers = new HttpHeaders().set('Content-Type','application/json');
 
     console.log(this.loginForm.value)
     this.http.post<any>('/api/query', JSON.stringify(this.loginForm.value),{headers: headers}).subscribe()

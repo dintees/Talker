@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-form',
@@ -37,8 +37,10 @@ export class FormComponent implements OnInit {
   }
   
   register(){
+    const headers = new HttpHeaders().set('Content-Type','application/json');
+
     console.log(this.registerForm.value)
-    this.http.post<any>('/query', JSON.stringify(this.registerForm.value)).subscribe()
+    this.http.post<any>('/api/query', JSON.stringify(this.registerForm.value),{headers: headers}).subscribe()
   }
 
 }
