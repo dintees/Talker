@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
     console.log("test")
     this.http.post<any>('http://localhost:3000/api/query', JSON.stringify(this.loginForm.value),{headers: headers}).subscribe(data => {
       console.log(data.success)
-      if(data.success == "true"){
+      if(data.success == true){
         this.gotoHome()
       }else{
         alert("Zły login lub hasło");
