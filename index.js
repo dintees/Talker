@@ -2,13 +2,17 @@
 const express = require('express');
 const path = require('path')
 const bodyParser = require('body-parser');
-const port = 3000;
+const PORT = 3000;
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 const Datastore = require('nedb');
 
 // File modules
 var Database = require('./modules/Database');
-const { redirect } = require('express/lib/response');
+var ApiQuery = require('./modules/ApiQuery');
 
 // Databases
 var users = new Datastore({ filename: "db/users.db", autoload: true });
@@ -22,50 +26,29 @@ app.use(bodyParser.json());
 
 app.post('/api/query', (req, res) => {
     console.log(req.body);
-    let obj = {};
     switch (req.body.action) {
         case "login":
-            console.log("Login action");
-            if (req.body.login == "" && req.body.password == "") res.send({ action: "login", success: false, message: "Empty login or password" });
-            else {
-                Database.SelectOne(users, { login: req.body.login, password: req.body.password }, (err, data) => {
-                    console.log(data);
-                    if (data) { delete data.password; res.send({ action: "login", success: true, user: data }) }
-                    else res.send({ action: "login", success: false, message: "Incorrect login or password." })
-                })
-            }
+            ApiQuery.Login(req, users).then(data => res.send(data));
             break;
 
         case "register":
-            console.log("Register action");
-            if (req.body.password == req.body.password2) {
-                Database.SelectOne(users, { login: req.body.login }, (err, doc) => {
-                    if (doc) res.send({ action: "register", success: false, message: "There is a user with the same login." })
-                    else {
-                        Database.SelectOne(users, { email: req.body.email }, (err, doc) => {
-                            if (doc) res.send({ action: "register", success: false, message: "There is a user with the same email." })
-                            else {
-                                let user = { login: req.body.login, password: req.body.password, email: req.body.email }
-                                Database.Insert(users, user, (err, newDoc) => {
-                                    if (newDoc) { delete newDoc.password; res.send({ action: "register", success: true, user: newDoc }) }
-                                    else res.send({ action: "register", success: false, message: "Error while adding new user." })
-                                })
-                            }
-                        })
-                    }
-                })
-            } else {
-                res.send({ action: "register", success: false, message: "The passwords are not identical." })
-            }
+            ApiQuery.Register(req, users).then(data => res.send(data));
             break;
 
         default:
-            obj = { success: false, message: "Unknown command" }
-            res.send(obj)
+            res.send({ success: false, message: "Unknown command" })
     }
 })
 
 
-app.listen(port, () => {
-    console.log("Server is listening on port " + port);
-});
+io.on('connection', (socket) => {
+    console.log('a user connected');
+  });
+  
+  server.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
+  });
+
+// app.listen(PORT, () => {
+//     console.log("Server is listening on PORT " + PORT);
+// });
