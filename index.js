@@ -24,6 +24,8 @@ app.use(express.static(path.join(__dirname, './book/dist/book')))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+
+
 app.post('/api/query', (req, res) => {
     console.log(req.body);
     switch (req.body.action) {
@@ -38,8 +40,12 @@ app.post('/api/query', (req, res) => {
         default:
             res.send({ success: false, message: "Unknown command" })
     }
+    
 })
 
+app.use('*', (req, res, next) => {
+    res.sendFile(path.join(__dirname, 'book/dist/book/index.html'));
+});
 
 io.on('connection', (socket) => {
     console.log('a user connected');
