@@ -9,6 +9,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const Datastore = require('nedb');
+const session = require('express-session');
 
 // File modules
 var Database = require('./modules/Database');
@@ -24,6 +25,14 @@ app.use(express.static(path.join(__dirname, './book/dist/book')))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Session support
+app.set('trust proxy', 1)
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true, maxAge: 3600 }
+}))
 
 
 app.post('/api/query', (req, res) => {
@@ -37,23 +46,29 @@ app.post('/api/query', (req, res) => {
             ApiQuery.Register(req, users).then(data => res.send(data));
             break;
 
+        case 'logout':
+            res.send(ApiQuery.LogOut(req));
+
+        case "check":
+            ApiQuery.CheckIfUserLoggedIn(req).then(data => res.send(data));
+        break;
+
         default:
             res.send({ success: false, message: "Unknown command" })
     }
-    
+
 })
 
-app.use('*', (req, res, next) => {
-    res.sendFile(path.join(__dirname, 'book/dist/book/index.html'));
-});
+// preventing refreshing page -> using Angular routing
+app.use('*', (req, res) => { res.sendFile(path.join(__dirname, 'book/dist/book/index.html'))});
 
 io.on('connection', (socket) => {
     console.log('a user connected');
-  });
-  
-  server.listen(PORT, () => {
+});
+
+server.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
-  });
+});
 
 // app.listen(PORT, () => {
 //     console.log("Server is listening on PORT " + PORT);

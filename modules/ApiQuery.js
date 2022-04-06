@@ -7,14 +7,20 @@ module.exports = {
             else {
                 Database.SelectOne(users, { login: req.body.login, password: req.body.password }, (err, data) => {
                     // console.log(data);
-                    if (data) { delete data.password; resolve({ action: "login", success: true, user: data }) }
+                    if (data) { 
+                        // Logged in successfully
+                        delete data.password;
+                        resolve({ action: "login", success: true, user: data }) // send data to the client
+
+                        this.SetSession(req, {loggedIn: true, user: data}) // set session
+                    }
                     else resolve({ action: "login", success: false, message: "Incorrect login or password" })
                 })
             }
         })
     },
 
-    Register: function(req, users) {
+    Register: function (req, users) {
         console.log(" - REGISTER - ");
         return new Promise(resolve => {
             if (req.body.password == req.body.password2) {
@@ -37,5 +43,24 @@ module.exports = {
                 resolve({ action: "register", success: false, message: "The passwords are not identical" })
             }
         })
-    }
+    },
+
+    LogOut: function(req) {
+        if (delete req.session) return ({ action: 'logout', success: true });
+        else return ({ action: 'logout', success: false, message: 'Something went wrong. Not logged out.'})
+    },
+
+    CheckIfUserLoggedIn: function(req) {
+        if (this.GetSession(req, 'loggedIn')) return ({ action: 'check', success: true, loggedIn: true })
+        else return ({ action: 'check', success: true, loggedIn: false })
+    },
+
+    SetSession: function (req, obj) {
+        for (const [key, value] of Object.entries(obj))
+            req.session[key] = value;
+    },
+
+    GetSession: function (req, name) {
+        return req.session[name];
+    },
 }
