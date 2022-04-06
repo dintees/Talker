@@ -48,9 +48,9 @@ app.post('/api/query', (req, res) => {
 
         case 'logout':
             res.send(ApiQuery.LogOut(req));
-
+            break;
         case "check":
-            ApiQuery.CheckIfUserLoggedIn(req).then(data => res.send(data));
+            res.send(ApiQuery.CheckIfUserLoggedIn(req));
         break;
 
         default:
