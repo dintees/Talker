@@ -7,12 +7,12 @@ module.exports = {
             else {
                 Database.SelectOne(users, { login: req.body.login, password: req.body.password }, (err, data) => {
                     // console.log(data);
-                    if (data) { 
+                    if (data) {
                         // Logged in successfully
                         delete data.password;
                         resolve({ action: "login", success: true, user: data }) // send data to the client
 
-                        this.SetSession(req, {loggedIn: true, user: data}) // set session
+                        this.SetSession(req, { loggedIn: true, user: data }) // set session
                     }
                     else resolve({ action: "login", success: false, message: "Incorrect login or password" })
                 })
@@ -45,12 +45,14 @@ module.exports = {
         })
     },
 
-    LogOut: function(req) {
-        if (delete req.session) return ({ action: 'logout', success: true });
-        else return ({ action: 'logout', success: false, message: 'Something went wrong. Not logged out.'})
+    LogOut: function (req) {
+        req.session.destroy(err => {
+            if (err) return ({ action: 'logout', success: false, message: 'Something went wrong. Not logged out.', error: err })
+            else return ({ action: 'logout', success: true });
+        })
     },
 
-    CheckIfUserLoggedIn: function(req) {
+    CheckIfUserLoggedIn: function (req) {
         if (this.GetSession(req, 'loggedIn')) return ({ action: 'check', success: true, loggedIn: true })
         else return ({ action: 'check', success: true, loggedIn: false })
     },

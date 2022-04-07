@@ -31,7 +31,7 @@ app.use(session({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true, maxAge: 3600 }
+    cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
 }))
 
 
@@ -49,9 +49,10 @@ app.post('/api/query', (req, res) => {
         case 'logout':
             res.send(ApiQuery.LogOut(req));
             break;
+            
         case "check":
             res.send(ApiQuery.CheckIfUserLoggedIn(req));
-        break;
+            break;
 
         default:
             res.send({ success: false, message: "Unknown command" })
@@ -60,8 +61,9 @@ app.post('/api/query', (req, res) => {
 })
 
 // preventing refreshing page -> using Angular routing
-app.use('*', (req, res) => { res.sendFile(path.join(__dirname, 'book/dist/book/index.html'))});
+app.use('*', (req, res) => { res.sendFile(path.join(__dirname, 'book/dist/book/index.html')) });
 
+// Socket support
 io.on('connection', (socket) => {
     console.log('a user connected');
 });
