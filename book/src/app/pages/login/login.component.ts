@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
       if(data.success == true){
         this.gotoHome()
       }else{
-        alert("Zły login lub hasło");
+        alert(data.message);
         (document.getElementById("mat-input-0") as HTMLInputElement).value="";
         (document.getElementById("mat-input-1") as HTMLInputElement).value="";  
       }

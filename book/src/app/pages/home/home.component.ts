@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { io } from "socket.io-client";
 
 @Component({
   selector: 'app-home',
@@ -8,6 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -29,10 +31,11 @@ export class HomeComponent implements OnInit {
             this.gotoLogin()
             console.log("działa")
           }
+          
       })
   
   }
 
-
+  socket = io('http://localhost:3000/api/query');
 
 }

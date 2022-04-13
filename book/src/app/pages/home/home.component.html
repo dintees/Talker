@@ -2,7 +2,6 @@
     
 <mat-toolbar>
     <span>
-        
         <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
             <mat-icon *ngIf="!sidenav.opened">
                 menu
@@ -16,8 +15,6 @@
     </span>
     <button mat-raised-button  (click)="logout()">Wyloguj się</button>
     </mat-toolbar>
-
-
 
   <mat-sidenav-container (click)="sidenav.toggle()">
     
