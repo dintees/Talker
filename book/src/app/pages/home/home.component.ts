@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) { }
 
   gotoLogin(){
-    this.router.navigate(['/'])
+    this.router.navigate(['/login'])
   }
 
   logout(){
@@ -23,6 +23,13 @@ export class HomeComponent implements OnInit {
     this.ngOnInit()
   }
 
+  socket = io('http://localhost:3000/api/query');
+  sendMessage(){
+    this.socket.emit('socket test')
+    console.log("socket log")
+    
+  }
+  
   ngOnInit() {
              
       this.http.post<any>('http://localhost:3000/api/query', {action: 'check'}).subscribe(data => {
@@ -33,9 +40,11 @@ export class HomeComponent implements OnInit {
           }
           
       })
-  
+  this.sendMessage()
   }
 
-  socket = io('http://localhost:3000/api/query');
-
+  
+  
+ 
+  
 }
