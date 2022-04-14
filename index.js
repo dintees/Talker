@@ -66,6 +66,15 @@ app.use('*', (req, res) => { res.sendFile(path.join(__dirname, 'book/dist/book/i
 // Socket support
 io.on('connection', (socket) => {
     console.log('a user connected');
+
+    socket.on('test', msg => {
+        console.log(" --- SOCKET TEST ---")
+        console.log(msg);
+    })
+
+    socket.on('disconnect', () => {
+        console.log("user disconnected")
+    })
 });
 
 server.listen(PORT, () => {

@@ -23,6 +23,10 @@ module.exports = {
     Register: function (req, users) {
         console.log(" - REGISTER - ");
         return new Promise(resolve => {
+            if (req.body.login == '' || req.body.password == '' || req.body.email == '') {
+                resolve({ action: 'register', success: false, message: 'Empty fields in the form.' })
+                return;
+            }
             if (req.body.password == req.body.password2) {
                 Database.SelectOne(users, { login: req.body.login }, (err, doc) => {
                     if (doc) resolve({ action: "register", success: false, message: "There is a user with the same login" })
@@ -32,7 +36,11 @@ module.exports = {
                             else {
                                 let user = { login: req.body.login, password: req.body.password, email: req.body.email }
                                 Database.Insert(users, user, (err, newDoc) => {
-                                    if (newDoc) { delete newDoc.password; resolve({ action: "register", success: true, user: newDoc }) }
+                                    if (!err) {
+                                        delete newDoc.password;
+                                        this.SetSession(req, { loggedIn: true, user: newDoc })
+                                        resolve({ action: "register", success: true, user: newDoc })
+                                    }
                                     else resolve({ action: "register", success: false, message: "Error while adding new user" })
                                 })
                             }
