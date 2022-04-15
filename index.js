@@ -6,14 +6,15 @@ const PORT = 3000;
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
 const Datastore = require('nedb');
 const session = require('express-session');
 
 // File modules
 var Database = require('./modules/Database');
 var ApiQuery = require('./modules/ApiQuery');
+
+// Initialization of socket.io server
+require('./modules/IO').Initialize(server);
 
 // Databases
 var users = new Datastore({ filename: "db/users.db", autoload: true });
@@ -63,19 +64,7 @@ app.post('/api/query', (req, res) => {
 // preventing refreshing page -> using Angular routing
 app.use('*', (req, res) => { res.sendFile(path.join(__dirname, 'book/dist/book/index.html')) });
 
-// Socket support
-io.on('connection', (socket) => {
-    console.log('a user connected');
 
-    socket.on('test', msg => {
-        console.log(" --- SOCKET TEST ---")
-        console.log(msg);
-    })
-
-    socket.on('disconnect', () => {
-        console.log("user disconnected")
-    })
-});
 
 server.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);

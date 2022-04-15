@@ -9,42 +9,41 @@ import { io } from "socket.io-client";
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  
+
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  gotoLogin(){
+  gotoLogin() {
     this.router.navigate(['/login'])
   }
 
-  logout(){
-    this.http.post<any>('http://localhost:3000/api/query', {action: 'logout'}).subscribe()
+  logout() {
+    this.http.post<any>('http://localhost:3000/api/query', { action: 'logout' }).subscribe()
     console.log("logout")
     this.ngOnInit()
   }
 
-  socket = io('http://localhost:3000/api/query');
-  sendMessage(){
-    this.socket.emit('socket test')
+  socket = io('http://localhost:3000');
+  sendMessage() {
+    this.socket.emit('test')
     console.log("socket log")
-    
-  }
-  
-  ngOnInit() {
-             
-      this.http.post<any>('http://localhost:3000/api/query', {action: 'check'}).subscribe(data => {
-          console.log(data)
-          if(data.loggedIn == false){
-            this.gotoLogin()
-            console.log("działa")
-          }
-          
-      })
-  this.sendMessage()
   }
 
-  
-  
- 
-  
+  ngOnInit() {
+
+    this.http.post<any>('http://localhost:3000/api/query', { action: 'check' }).subscribe(data => {
+      console.log(data)
+      if (data.loggedIn == false) {
+        this.gotoLogin()
+        console.log("działa")
+      }
+
+    })
+    this.sendMessage()
+  }
+
+
+
+
+
 }
