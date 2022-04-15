@@ -26,6 +26,10 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDividerModule} from '@angular/material/divider';
 
 import { HttpClientModule } from '@angular/common/http';
+import { FriendComponent } from './components/friend/friend.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { LeftChatComponent } from './components/left-chat/left-chat.component';
+import { RightChatComponent } from './components/right-chat/right-chat.component';
 
 
 @NgModule({
@@ -36,7 +40,11 @@ import { HttpClientModule } from '@angular/common/http';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    SidebarComponent
+    SidebarComponent,
+    FriendComponent,
+    ChatComponent,
+    LeftChatComponent,
+    RightChatComponent
   ],
   imports: [
     BrowserModule,

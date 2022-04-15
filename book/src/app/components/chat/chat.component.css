@@ -1,0 +1,12 @@
+#container{
+
+    display: flex;
+    justify-content: center;
+    height: 90%;
+    margin: 1%;
+}
+
+#child{
+    width: 960px;
+    background-color: aliceblue;
+}

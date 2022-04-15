@@ -1,0 +1,28 @@
+
+#friend{
+    background-color: white;
+    
+    width: 90%;
+    height: 7%;
+    margin: 5%;
+    margin-bottom: -12%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    
+
+}
+
+#txt{
+    display: inline;
+    width: 80%;
+    font-size: 0.7em;
+    top: 50%;
+    
+
+}
+
+img{
+    width: 15%;
+    padding-left: 10%;
+}
