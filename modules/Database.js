@@ -9,7 +9,11 @@ module.exports = {
   SelectOne: function (coll, data, callback) {
     console.log("- SELECT -")
     coll.findOne(data, (err, doc) => callback(err, doc))
-  }
+  },
+
+  Select: function (coll, data, callback) {
+    coll.find(data, (err, docs) => callback(err, docs))
+  },
 }
 
 /*

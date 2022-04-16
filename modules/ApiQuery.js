@@ -65,6 +65,10 @@ module.exports = {
         else return ({ action: 'check', success: true, loggedIn: false })
     },
 
+    CheckUser: function (req) {
+        return (this.GetSession('loggedIn'));
+    },
+
     SetSession: function (req, obj) {
         for (const [key, value] of Object.entries(obj))
             req.session[key] = value;
@@ -72,5 +76,23 @@ module.exports = {
 
     GetSession: function (req, name) {
         return req.session[name];
+    },
+
+    GetFriendsList: function (req, users) {
+        return new Promise(resolve => {
+            if (this.CheckUser(req)) {
+                // to improve -> just sending friends, not all of them
+                Database.Select(users, {}, (err, docs) => {
+                    if (err) resolve({ action: 'getFriendsList', success: false })
+                    else {
+                        // deleting fields -> to improve -> add name, surname and avatar
+                        delete docs.password;
+                        delete docs.email;
+
+                        resolve({ action: 'getFriendsList', success: true, users: docs })
+                    }
+                })
+            }
+        })
     },
 }

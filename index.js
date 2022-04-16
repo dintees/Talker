@@ -50,6 +50,10 @@ app.post('/api/query', (req, res) => {
         case 'logout':
             res.send(ApiQuery.LogOut(req));
             break;
+
+        case "getFriendsList":
+            ApiQuery.GetFriendsList(req, users).then(data => res.send(data));
+            break;
             
         case "check":
             res.send(ApiQuery.CheckIfUserLoggedIn(req));
