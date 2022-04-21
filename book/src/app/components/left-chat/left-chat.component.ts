@@ -14,4 +14,5 @@ export class LeftChatComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  @Input() item = '';
 }
