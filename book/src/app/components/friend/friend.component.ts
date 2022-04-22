@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-friend',
@@ -11,5 +11,8 @@ export class FriendComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  @Input() friend_img = '';
+  @Input() friend_txt = '';
 
 }
