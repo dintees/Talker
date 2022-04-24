@@ -66,7 +66,7 @@ module.exports = {
     },
 
     CheckUser: function (req) {
-        return (this.GetSession('loggedIn'));
+        return (this.GetSession(req, 'loggedIn'));
     },
 
     SetSession: function (req, obj) {
@@ -82,13 +82,15 @@ module.exports = {
         return new Promise(resolve => {
             if (this.CheckUser(req)) {
                 // to improve -> just sending friends, not all of them
-                Database.Select(users, {}, (err, docs) => {
+                Database.Select(users, { $not: {login: this.GetSession(req, 'user').login} }, (err, docs) => {
                     if (err) resolve({ action: 'getFriendsList', success: false })
                     else {
-                        // deleting fields -> to improve -> add name, surname and avatar
-                        delete docs.password;
-                        delete docs.email;
-
+                        // deleting fields -> to improve -> add name, surname and avatar (in registration)
+                        docs.forEach(o => {
+                            delete o.password;
+                            delete o.email;
+                        })
+                        
                         resolve({ action: 'getFriendsList', success: true, users: docs })
                     }
                 })
