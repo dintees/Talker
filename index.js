@@ -18,6 +18,7 @@ require('./modules/IO').Initialize(server);
 
 // Databases
 var users = new Datastore({ filename: "db/users.db", autoload: true });
+var messages = new Datastore({ filename: "db/messages.db", autoload: true });
 
 // Load Angular files
 app.use(express.static(path.join(__dirname, './book/dist/book')))
@@ -47,7 +48,7 @@ app.post('/api/query', (req, res) => {
             ApiQuery.Register(req, users).then(data => res.send(data));
             break;
 
-        case 'logout':
+        case "logout":
             res.send(ApiQuery.LogOut(req));
             break;
 
@@ -57,6 +58,10 @@ app.post('/api/query', (req, res) => {
             
         case "check":
             res.send(ApiQuery.CheckIfUserLoggedIn(req));
+            break;
+
+        case "getMessages":
+            res.send(ApiQuery.GetMessages(req, req.body.receiverID, messages).then(data => res.send(data)));
             break;
 
         default:

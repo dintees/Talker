@@ -97,4 +97,18 @@ module.exports = {
             }
         })
     },
+
+    GetMessages: function(req, receiverID, Database) {
+        return new Promise((resolve, reject) => {
+            if (this.CheckUser(req)) {
+                Database.Select({ senderID: this.GetSession(req, 'user')._id, receiverID: receiverID }, (err, docs) => {
+                    if (err) {
+                        reject({ success: false })
+                    } else {
+                        resolve({action: 'getMessage', success: true, messages: docs})
+                    }
+                })
+            }
+        })
+    },
 }
