@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { io } from "socket.io-client";
 import { FriendComponent } from 'src/app/components/friend/friend.component';
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser"; 
+import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 
 @Component({
   selector: 'app-home',
@@ -12,7 +14,10 @@ import { FriendComponent } from 'src/app/components/friend/friend.component';
 export class HomeComponent implements OnInit {
 
 
-  constructor(private http: HttpClient, private router: Router, private componentFactoryResolver: ComponentFactoryResolver) { }
+  constructor(private http: HttpClient, private router: Router, private componentFactoryResolver: ComponentFactoryResolver, 
+    private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer, ) {
+      this.matIconRegistry.addSvgIcon('send', this.domSanitizer.bypassSecurityTrustResourceUrl('send.svg'))
+     }
 
   gotoLogin() {
     this.router.navigate(['/login'])
@@ -50,11 +55,16 @@ export class HomeComponent implements OnInit {
     let fr = this.container.createComponent(friend)
 
     this.http.post<any>('http://localhost:3000/api/query', { action: 'getFriendsList'}).subscribe(list => {
-      console.log(list)
+      console.log(list.users)
+      for(var i =0; i< list.users.length; i++){
+        fr.instance.friend_txt=list.users[i].login
+    fr.instance.friend_img="https://stonebridgesmiles.com/wp-content/uploads/2019/12/GettyImages-1128826884-scaled.jpg"
+      }
+
     })
 
-    fr.instance.friend_txt="Jaś Fasola"
-    fr.instance.friend_img="https://stonebridgesmiles.com/wp-content/uploads/2019/12/GettyImages-1128826884-scaled.jpg"
+    // fr.instance.friend_txt="Jaś Fasola"
+    // fr.instance.friend_img="https://stonebridgesmiles.com/wp-content/uploads/2019/12/GettyImages-1128826884-scaled.jpg"
     
   }
 

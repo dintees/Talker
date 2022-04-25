@@ -19,3 +19,22 @@ mat-sidenav{
     margin-right: 0px;
     float: right;
 }
+#textbox{
+    display: flex;
+    justify-content: center;
+    width: 960px;
+
+}
+
+#container{
+
+    display: flex;
+    justify-content: center;
+    background-color: rgb(230, 240, 255);
+    height: 8%;
+}
+#send_bt{
+    top: -7%;
+    right: 10%;
+    float: right;
+}   
