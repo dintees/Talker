@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewContainerRef, ComponentFactoryResolver, ViewChild, } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ComponentFactoryResolver, ViewChild, HostListener, ElementRef, Input} from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { io } from "socket.io-client";
 import { FriendComponent } from 'src/app/components/friend/friend.component';
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser"; 
 import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
+
 
 @Component({
   selector: 'app-home',
@@ -14,8 +15,11 @@ import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 export class HomeComponent implements OnInit {
 
 
+
+  
+
   constructor(private http: HttpClient, private router: Router, private componentFactoryResolver: ComponentFactoryResolver, 
-    private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer, ) {
+    private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer,) {
       this.matIconRegistry.addSvgIcon('send', this.domSanitizer.bypassSecurityTrustResourceUrl('send.svg'))
      }
 
@@ -36,6 +40,9 @@ export class HomeComponent implements OnInit {
   }
   @ViewChild("container", {read: ViewContainerRef}) container!: ViewContainerRef;     
 
+
+  
+
   ngOnInit() {
 
     this.http.post<any>('http://localhost:3000/api/query', { action: 'check' }).subscribe(data => {
@@ -47,22 +54,30 @@ export class HomeComponent implements OnInit {
 
     })
     this.sendMessage()
+    
+    
   }
-
+  
   ngAfterViewInit() {
-    const friend = this.componentFactoryResolver.resolveComponentFactory(FriendComponent);
+    
+    const friend = this.componentFactoryResolver.resolveComponentFactory(FriendComponent );
     console.log(this.container)
-    let fr = this.container.createComponent(friend)
+    let fr = this.container.createComponent(friend )
 
     this.http.post<any>('http://localhost:3000/api/query', { action: 'getFriendsList'}).subscribe(list => {
       console.log(list.users)
+      let id = list.users._id;
+      
       for(var i =0; i< list.users.length; i++){
         fr.instance.friend_txt=list.users[i].login
     fr.instance.friend_img="https://stonebridgesmiles.com/wp-content/uploads/2019/12/GettyImages-1128826884-scaled.jpg"
+    
+
+    
       }
 
     })
-
+   
     // fr.instance.friend_txt="Jaś Fasola"
     // fr.instance.friend_img="https://stonebridgesmiles.com/wp-content/uploads/2019/12/GettyImages-1128826884-scaled.jpg"
     

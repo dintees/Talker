@@ -25,7 +25,6 @@ mat-sidenav{
     width: 960px;
 
 }
-
 #container{
 
     display: flex;
@@ -35,6 +34,6 @@ mat-sidenav{
 }
 #send_bt{
     top: -7%;
-    right: 10%;
+    margin-right: 20%;
     float: right;
 }   
