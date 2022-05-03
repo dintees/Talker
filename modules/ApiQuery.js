@@ -98,16 +98,21 @@ module.exports = {
         })
     },
 
-    GetMessages: function(req, receiverID, Database) {
+    GetMessages: function(req, receiverID, messagesColl) {
         return new Promise((resolve, reject) => {
             if (this.CheckUser(req)) {
-                Database.Select({ senderID: this.GetSession(req, 'user')._id, receiverID: receiverID }, (err, docs) => {
+                Database.Select(messagesColl, { $or:  [{ senderID: this.GetSession(req, 'user')._id, receiverID: receiverID }, {senderID: receiverID, receiverID: this.GetSession(req, 'user')._id}]}, (err, docs) => {
                     if (err) {
                         reject({ success: false })
                     } else {
+                        docs.forEach(o => {
+                            delete o.receiverID
+                        })
                         resolve({action: 'getMessage', success: true, messages: docs})
                     }
                 })
+            } else {
+                reject({ success: false, message: "User not logged in" })
             }
         })
     },

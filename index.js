@@ -61,7 +61,7 @@ app.post('/api/query', (req, res) => {
             break;
 
         case "getMessages":
-            res.send(ApiQuery.GetMessages(req, req.body.receiverID, messages).then(data => res.send(data)));
+            ApiQuery.GetMessages(req, req.body.receiverID, messages).then(data => res.send(data));
             break;
 
         default:
