@@ -74,7 +74,6 @@ app.post('/api/query', (req, res) => {
 app.use('*', (req, res) => { res.sendFile(path.join(__dirname, 'book/dist/book/index.html')) });
 
 
-
 server.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
