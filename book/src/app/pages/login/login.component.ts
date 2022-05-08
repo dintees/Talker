@@ -3,6 +3,7 @@ import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -43,12 +44,14 @@ export class LoginComponent implements OnInit {
   login(){
 
     const headers = new HttpHeaders().set('Content-Type','application/json');
-    console.log(this.loginForm.value)
+    console.log(this.loginForm.value) 
     console.log("test")
     this.http.post<any>('http://localhost:3000/api/query', JSON.stringify(this.loginForm.value),{headers: headers}).subscribe(data => {
-      console.log(data.success)
+      console.log(data)
+      
       if(data.success == true){
         this.gotoHome()
+
       }else{
         alert(data.message);
         (document.getElementById("mat-input-0") as HTMLInputElement).value="";

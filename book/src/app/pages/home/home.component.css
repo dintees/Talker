@@ -23,6 +23,7 @@ mat-sidenav{
     display: flex;
     justify-content: center;
     width: 960px;
+    font-size: 3em;
 
 }
 #container{

@@ -12,6 +12,7 @@ export class FriendComponent implements OnInit {
   constructor(private shared: SharedService, private http: HttpClient) { }
   message = "data passing"
   ngOnInit(): void {
+   
   }
 
   @Input() friend_img = '';

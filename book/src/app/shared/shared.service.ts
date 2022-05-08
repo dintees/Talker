@@ -11,7 +11,9 @@ export class SharedService {
   constructor() { }
 
   @Output() clickEvent = new EventEmitter<string>()
+  @Output() idEvent = new EventEmitter<string>()
   ClickedId(msg: string){
     this.clickEvent.emit(msg)
   }
+
 }

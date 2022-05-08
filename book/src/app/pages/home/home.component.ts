@@ -54,7 +54,19 @@ export class HomeComponent implements OnInit {
 
     })
     this.sendMessage()
-    
+    let socket = io('http://localhost:3000');
+    this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
+
+      socket.on('connect', () =>{
+        console.log(socket.id+" "+userid)
+        socket.emit('handshake',{ socketID: socket.id, userID: userid})
+      })
+      
+  })
+
+    //only for angular server
+   
+
     
   }
   
