@@ -34,10 +34,21 @@ export class ChatComponent implements OnInit {
 
   ngAfterViewInit() {
 
+    const left = this.componentFactoryResolver.resolveComponentFactory(LeftChatComponent);
+    const right = this.componentFactoryResolver.resolveComponentFactory(RightChatComponent);
+
     this.shared.clickEvent.subscribe((data: string) => {
       console.log(data)
-      this.http.post<any>('http://localhost:3000/api/query', { action: 'getMessages', receiverID: data }).subscribe(data => {
-
+      this.http.post<any>('http://localhost:3000/api/query', { action: 'getMessages', receiverID: data }).subscribe(msg => {
+        console.log(msg.messages)
+        for(var i = 0; i < msg.messages.length; i++){
+          if(msg.messages[i].senderID == data){
+            this.container.createComponent(left).instance.item = msg.messages[i].message
+          }else{
+            this.container.createComponent(right).instance.item = msg.messages[i].message
+          }
+        }
+        
       })
     })
 
@@ -47,12 +58,6 @@ export class ChatComponent implements OnInit {
 
     // })
 
-    const left = this.componentFactoryResolver.resolveComponentFactory(LeftChatComponent);
-    const right = this.componentFactoryResolver.resolveComponentFactory(RightChatComponent);
-    console.log(this.container)
-    this.container.createComponent(right).instance.item = "Witam"
-    this.container.createComponent(left).instance.item = "Dzień dobry"
-    this.container.createComponent(right).instance.item = "test12345"
   }
 
 
