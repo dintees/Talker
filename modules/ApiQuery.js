@@ -78,6 +78,14 @@ module.exports = {
         return req.session[name];
     },
 
+    GetUserID: function (req) {
+        if (this.CheckUser(req)) {
+            let id = this.GetSession(req, 'user')._id;
+            if (id) return { success: true, userID: id }
+            else return { success: false, message: "Something went wrong." }
+        }
+    },
+
     GetFriendsList: function (req, users) {
         return new Promise(resolve => {
             if (this.CheckUser(req)) {

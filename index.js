@@ -55,6 +55,10 @@ app.post('/api/query', (req, res) => {
         case "getFriendsList":
             ApiQuery.GetFriendsList(req, users).then(data => res.send(data));
             break;
+
+        case "getUserID":
+            res.send(ApiQuery.GetUserID(req));
+            break;
             
         case "check":
             res.send(ApiQuery.CheckIfUserLoggedIn(req));
