@@ -53,16 +53,16 @@ export class HomeComponent implements OnInit {
       }
 
     })
-    this.sendMessage()
-    let socket = io('http://localhost:3000');
-    this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
+  //   this.sendMessage()
+  //   let socket = io('http://localhost:3000');
+  //   this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
 
-      socket.on('connect', () =>{
-        console.log(socket.id+" "+userid)
-        socket.emit('handshake',{ socketID: socket.id, userID: userid})
-      })
+  //     socket.on('connect', () =>{
+  //       console.log(socket.id+" "+userid.userID)
+  //       socket.emit('handshake',{ socketID: socket.id, userID: userid.userID})
+  //     })
       
-  })
+  // })
 
     //only for angular server
    
@@ -89,6 +89,20 @@ export class HomeComponent implements OnInit {
       }
 
     })
+
+
+    this.sendMessage()
+    let socket = io('http://localhost:3000');
+    this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
+
+      socket.on('connect', () =>{
+        console.log(socket.id+" "+userid.userID)
+        socket.emit('handshake',{ socketID: socket.id, userID: userid.userID})
+      })
+      
+  })
+
+    //only for angular server
    
     // fr.instance.friend_txt="Jaś Fasola"
     // fr.instance.friend_img="https://stonebridgesmiles.com/wp-content/uploads/2019/12/GettyImages-1128826884-scaled.jpg"
