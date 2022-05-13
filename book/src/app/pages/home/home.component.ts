@@ -5,6 +5,8 @@ import { io } from "socket.io-client";
 import { FriendComponent } from 'src/app/components/friend/friend.component';
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser"; 
 import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
+import { SharedService } from 'src/app/shared/shared.service';
+// import { emit } from 'process';
 
 
 @Component({
@@ -19,9 +21,26 @@ export class HomeComponent implements OnInit {
   
 
   constructor(private http: HttpClient, private router: Router, private componentFactoryResolver: ComponentFactoryResolver, 
-    private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer,) {
+    private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer, private shared: SharedService) {
       this.matIconRegistry.addSvgIcon('send', this.domSanitizer.bypassSecurityTrustResourceUrl('send.svg'))
      }
+
+  messageSend(msg:string){
+        this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
+
+      // socket.on('connect', () =>{
+      //   console.log(socket.id+" "+userid.userID)
+      //   socket.emit('handshake',{ socketID: socket.id, userID: userid.userID})
+      // })
+      console.log("test receiver:"+this.shared.get())
+
+      
+      let socket = io('http://localhost:3000');
+       socket.emit("chat",{senderID:userid.userID, message: msg, receiverID: this.shared.get()})
+      
+  })
+   
+  }   
 
   gotoLogin() {
     this.router.navigate(['/login'])
@@ -33,11 +52,11 @@ export class HomeComponent implements OnInit {
     this.ngOnInit()
   }
 
-  socket = io('http://localhost:3000');
-  sendMessage() {
-    this.socket.emit('test')
-    console.log("socket log")
-  }
+  // socket = io('http://localhost:3000');
+  // sendMessage() {
+  //   this.socket.emit('test')
+  //   console.log("socket log")
+  // }
   @ViewChild("container", {read: ViewContainerRef}) container!: ViewContainerRef;     
 
 
@@ -91,7 +110,7 @@ export class HomeComponent implements OnInit {
     })
 
 
-    this.sendMessage()
+    // this.sendMessage()
     let socket = io('http://localhost:3000');
     this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
 

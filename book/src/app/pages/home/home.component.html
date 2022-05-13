@@ -31,9 +31,9 @@
 <app-chat></app-chat>
 
 <div id="container">
-    <input type="text" id="textbox">
+    <input type="text" id="textbox" #message>
 
 </div>
-<button id="send_bt" style="background-color:#cce0ff;" mat-fab >
+<button id="send_bt" (click)="messageSend(message.value)"  style="background-color:#cce0ff;" mat-fab >
     <mat-icon>send</mat-icon>
 </button>

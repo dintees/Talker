@@ -39,6 +39,9 @@ export class ChatComponent implements OnInit {
 
     this.shared.clickEvent.subscribe((data: string) => {
       console.log(data)
+      this.shared.set(data)
+
+
       this.http.post<any>('http://localhost:3000/api/query', { action: 'getMessages', receiverID: data }).subscribe(msg => {
         console.log(msg.messages)
         for(var i = 0; i < msg.messages.length; i++){
