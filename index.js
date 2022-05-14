@@ -13,12 +13,14 @@ const session = require('express-session');
 var Database = require('./modules/Database');
 var ApiQuery = require('./modules/ApiQuery');
 
-// Initialization of socket.io server
-require('./modules/IO').Initialize(server);
-
 // Databases
 var users = new Datastore({ filename: "db/users.db", autoload: true });
 var messages = new Datastore({ filename: "db/messages.db", autoload: true });
+
+// Initialization of socket.io server
+var io = require('./modules/IO')
+io.Initialize(server);
+io.set("messages", messages)
 
 // Load Angular files
 app.use(express.static(path.join(__dirname, './book/dist/book')))

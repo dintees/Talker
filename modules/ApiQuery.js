@@ -116,6 +116,7 @@ module.exports = {
                         docs.forEach(o => {
                             delete o.receiverID
                         })
+                        docs.sort((a, b) => a.time - b.time)
                         resolve({action: 'getMessage', success: true, messages: docs})
                     }
                 })
