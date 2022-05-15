@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HomeComponent } from 'src/app/pages/home/home.component';
 import { FriendComponent } from '../friend/friend.component';
 import { SharedService } from 'src/app/shared/shared.service';
+import { io } from "socket.io-client";
 
 @Component({
   selector: 'app-chat',
@@ -41,11 +42,18 @@ export class ChatComponent implements OnInit {
       console.log(data)
       this.shared.set(data)
 
-
+  
+      
       this.http.post<any>('http://localhost:3000/api/query', { action: 'getMessages', receiverID: data }).subscribe(msg => {
         console.log(msg.messages)
+     
+        for(var i = 0; i < msg.messages.length; i++){
+          this.container.remove()
+        }
+
         for(var i = 0; i < msg.messages.length; i++){
           if(msg.messages[i].senderID == data){
+            
             this.container.createComponent(left).instance.item = msg.messages[i].message
           }else{
             this.container.createComponent(right).instance.item = msg.messages[i].message
@@ -54,6 +62,8 @@ export class ChatComponent implements OnInit {
         
       })
     })
+
+  
 
 
 

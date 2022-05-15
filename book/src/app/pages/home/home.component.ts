@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { SharedService } from 'src/app/shared/shared.service';
 // import { emit } from 'process';
-
+export let socket = io('http://localhost:3000');
 
 @Component({
   selector: 'app-home',
@@ -16,8 +16,8 @@ import { SharedService } from 'src/app/shared/shared.service';
 })
 export class HomeComponent implements OnInit {
 
-
-
+  
+  
   
 
   constructor(private http: HttpClient, private router: Router, private componentFactoryResolver: ComponentFactoryResolver, 
@@ -34,14 +34,14 @@ export class HomeComponent implements OnInit {
       // })
       console.log("test receiver:"+this.shared.get())
 
-      
-      let socket = io('http://localhost:3000');
+   
        socket.emit("chat",{senderID:userid.userID, message: msg, receiverID: this.shared.get()})
       
   })
    
   }   
 
+  
   gotoLogin() {
     this.router.navigate(['/login'])
   }
@@ -85,7 +85,10 @@ export class HomeComponent implements OnInit {
 
     //only for angular server
    
-
+    socket.on("messageSent", data =>{
+      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx")
+      console.log("msg sent test: "+data)
+    })
     
   }
   
@@ -111,7 +114,7 @@ export class HomeComponent implements OnInit {
 
 
     // this.sendMessage()
-    let socket = io('http://localhost:3000');
+   
     this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
 
       socket.on('connect', () =>{
@@ -119,6 +122,10 @@ export class HomeComponent implements OnInit {
         socket.emit('handshake',{ socketID: socket.id, userID: userid.userID})
       })
       
+      socket.on("messageSent", data =>{
+        console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        console.log("msg sent test: "+data)
+      })
   })
 
     //only for angular server
