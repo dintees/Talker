@@ -8,5 +8,7 @@
 
 #child{
     width: 960px;
+    height: 100%;
+    overflow-y: scroll;
     background-color: aliceblue;
 }
