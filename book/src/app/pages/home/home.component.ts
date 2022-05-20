@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewContainerRef, ViewChild, HostListener, ElementRef, Input} from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewChild, HostListener, ElementRef, Input } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { io } from "socket.io-client";
 import { FriendComponent } from 'src/app/components/friend/friend.component';
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser"; 
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { SharedService } from 'src/app/shared/shared.service';
 // import { emit } from 'process';
@@ -18,32 +18,28 @@ export let socket = io('http://localhost:3000');
 
 export class HomeComponent implements OnInit {
 
-  
-  
-  
-
   constructor(private http: HttpClient, private router: Router,
     private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer, private shared: SharedService) {
-      this.matIconRegistry.addSvgIcon('send', this.domSanitizer.bypassSecurityTrustResourceUrl('send.svg'))
-     }
+    this.matIconRegistry.addSvgIcon('send', this.domSanitizer.bypassSecurityTrustResourceUrl('send.svg'))
+  }
 
-  messageSend(msg:string){
-        this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
+  messageSend(msg: string) {
+    this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
 
       // socket.on('connect', () =>{
       //   console.log(socket.id+" "+userid.userID)
       //   socket.emit('handshake',{ socketID: socket.id, userID: userid.userID})
       // })
-      console.log("test receiver:"+this.shared.get())
+      console.log("test receiver:" + this.shared.get())
 
-   
-       socket.emit("chat",{senderID:userid.userID, message: msg, receiverID: this.shared.get()})
-      
-  })
-   
-  }   
 
-  
+      socket.emit("chat", { senderID: userid.userID, message: msg, receiverID: this.shared.get() })
+
+    })
+
+  }
+
+
   gotoLogin() {
     this.router.navigate(['/login'])
   }
@@ -59,10 +55,10 @@ export class HomeComponent implements OnInit {
   //   this.socket.emit('test')
   //   console.log("socket log")
   // }
-  @ViewChild("container", {read: ViewContainerRef}) container!: ViewContainerRef;     
+  @ViewChild("container", { read: ViewContainerRef }) container!: ViewContainerRef;
 
 
-  
+
 
   ngOnInit() {
 
@@ -74,69 +70,57 @@ export class HomeComponent implements OnInit {
       }
 
     })
-  //   this.sendMessage()
-  //   let socket = io('http://localhost:3000');
-  //   this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
+    // this.sendMessage()
+    //   let socket = io('http://localhost:3000');
+    //   this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
 
-  //     socket.on('connect', () =>{
-  //       console.log(socket.id+" "+userid.userID)
-  //       socket.emit('handshake',{ socketID: socket.id, userID: userid.userID})
-  //     })
-      
-  // })
+    //     socket.on('connect', () =>{
+    //       console.log(socket.id+" "+userid.userID)
+    //       socket.emit('handshake',{ socketID: socket.id, userID: userid.userID})
+    //     })
 
-    //only for angular server
-   
-    socket.on("messageSent", data =>{
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx")
-      console.log("msg sent test: "+data)
-    })
-    
+    // })
   }
-  
+
   ngAfterViewInit() {
-    
-   
+
+
     console.log(this.container)
 
-    this.http.post<any>('http://localhost:3000/api/query', { action: 'getFriendsList'}).subscribe(list => {
+    this.http.post<any>('http://localhost:3000/api/query', { action: 'getFriendsList' }).subscribe(list => {
       console.log(list.users)
       let id = list.users._id;
-      
-      for(var i =0; i< list.users.length; i++){
-        let a = this.container.createComponent(FriendComponent)
-        a.instance.friend_txt=list.users[i].login
-        a.instance.friend_img="https://stonebridgesmiles.com/wp-content/uploads/2019/12/GettyImages-1128826884-scaled.jpg"
-  
-      }
 
+      for (var i = 0; i < list.users.length; i++) {
+        let a = this.container.createComponent(FriendComponent)
+        a.instance.friend_txt = list.users[i].login
+        a.instance.friend_img = "https://stonebridgesmiles.com/wp-content/uploads/2019/12/GettyImages-1128826884-scaled.jpg"
+
+      }
     })
 
 
     // this.sendMessage()
-   
-    this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
 
-      socket.on('connect', () =>{
-        console.log(socket.id+" "+userid.userID)
-        socket.emit('handshake',{ socketID: socket.id, userID: userid.userID})
+    this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
+      socket.on('connect', () => {
+        if (socket) socket.emit('handshake', { socketID: socket.id, userID: userid.userID })
       })
-      
-      socket.on("messageSent", data =>{
-        console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx")
-        console.log("msg sent test: "+data)
-      })
-  })
+    })
 
     //only for angular server
-   
+
     // fr.instance.friend_txt="Jaś Fasola"
     // fr.instance.friend_img="https://stonebridgesmiles.com/wp-content/uploads/2019/12/GettyImages-1128826884-scaled.jpg"
-    
+
   }
-
-
-
-
-
 }
+
+socket.on('connect', () => {
+  console.log("CONNECTED");
+  socket.on("messageSent", data => {
+    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    console.log(data)
+  })
+  socket.on("bbb", d => console.log(d));
+})

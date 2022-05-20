@@ -5,12 +5,12 @@ let io = null;
 module.exports = {
     connectedUsers: new Map(),
     messages: null,
-    set: function(name, val) {
+    set: function (name, val) {
         this[name] = val;
     },
 
     Initialize: function (httpServer) {
-        io = new Server(httpServer, { pingTimeout: 10*60*1000 });
+        io = new Server(httpServer, { pingTimeout: 10 * 60 * 1000 });
 
         // Socket support
         io.on('connection', (socket) => {
@@ -32,10 +32,11 @@ module.exports = {
                     time: new Date().getTime()
                 }
                 Database.Insert(this.messages, objToInsert, (err, doc) => {
+                    io.to(socket.id).emit("messageSent", objToInsert);
                     if (!err) {
                         let receiverSocketID = this.connectedUsers.get(data.receiverID)
                         if (receiverSocketID) {
-                            socket.to(receiverSocketID).emit({action: "messageSent", objToInsert });
+                            socket.to(receiverSocketID).emit("messageSent", objToInsert);
                         } // else -> user is off-line
                     }
                 })
@@ -52,7 +53,7 @@ module.exports = {
         });
     },
 
-    GetInstance: function() {
+    GetInstance: function () {
         return io;
     }
 }
