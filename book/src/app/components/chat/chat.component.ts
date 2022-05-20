@@ -6,6 +6,7 @@ import { HomeComponent } from 'src/app/pages/home/home.component';
 import { FriendComponent } from '../friend/friend.component';
 import { SharedService } from 'src/app/shared/shared.service';
 import { io } from "socket.io-client";
+import { socket } from 'src/app/pages/home/home.component';
 
 @Component({
   selector: 'app-chat',
@@ -45,7 +46,7 @@ export class ChatComponent implements OnInit {
       this.shared.set(data)
       console.log(this.container.indexOf)
       let rem = document.getElementById("chat")?.childElementCount
-      
+    
       
       this.http.post<any>('http://localhost:3000/api/query', { action: 'getMessages', receiverID: data }).subscribe(msg => {
         console.log(msg.messages)
@@ -66,17 +67,21 @@ export class ChatComponent implements OnInit {
       })
     })
 
-  
-
-
+    socket.on('connect', () => {
+      console.log("CONNECTED");
+      socket.on("messageSent", data => {
+        console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        console.log(data)
+        this.container.createComponent(RightChatComponent).instance.item = data.message
+        
+      })
+      socket.on("bbb", d => console.log(d));
+    })
 
     // this.http.post<any>('http://localhost:3000/api/query', {action: 'getMessages'}).subscribe(data =>{
 
     // })
 
   }
-
-
-
 
 }

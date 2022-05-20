@@ -116,11 +116,3 @@ export class HomeComponent implements OnInit {
   }
 }
 
-socket.on('connect', () => {
-  console.log("CONNECTED");
-  socket.on("messageSent", data => {
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx")
-    console.log(data)
-  })
-  socket.on("bbb", d => console.log(d));
-})
