@@ -58,7 +58,7 @@ export class ChatComponent implements OnInit {
         for(var i = 0; i < msg.messages.length; i++){
           if(msg.messages[i].senderID == data){
             
-            this.container.createComponent(LeftChatComponent)
+            this.container.createComponent(LeftChatComponent).instance.item = msg.messages[i].message
           }else{
             this.container.createComponent(RightChatComponent).instance.item = msg.messages[i].message
           }
@@ -69,12 +69,32 @@ export class ChatComponent implements OnInit {
 
     socket.on('connect', () => {
       console.log("CONNECTED");
+      
+
+
       socket.on("messageSent", data => {
-        console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        this.http.post<any>('http://localhost:3000/api/query', { action: 'getUserID' }).subscribe(userid => {
+
+          console.log(userid)
+          console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx")
         console.log(data)
-        this.container.createComponent(RightChatComponent).instance.item = data.message
+        
+        if(data.senderID == userid.userID){
+            
+          let a = this.container.createComponent(RightChatComponent)
+          a.instance.item = data.message
+        }else{
+          let a = this.container.createComponent(LeftChatComponent)
+          a.instance.item = data.message
+        }
+
+
+   
+        })
+  
         
       })
+
       socket.on("bbb", d => console.log(d));
     })
 
