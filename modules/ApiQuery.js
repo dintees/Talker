@@ -2,7 +2,6 @@ var Database = require('./Database')
 module.exports = {
     Login: function (req, users) {
         return new Promise(resolve => {
-            console.log(" - LOGIN - ");
             if (req.body.login == "" && req.body.password == "") resolve({ action: "login", success: false, message: "Empty login or password" });
             else {
                 Database.SelectOne(users, { login: req.body.login, password: req.body.password }, (err, data) => {
@@ -21,7 +20,6 @@ module.exports = {
     },
 
     Register: function (req, users) {
-        console.log(" - REGISTER - ");
         return new Promise(resolve => {
             if (req.body.login == '' || req.body.password == '' || req.body.email == '') {
                 resolve({ action: 'register', success: false, message: 'Empty fields in the form.' })
@@ -34,7 +32,7 @@ module.exports = {
                         Database.SelectOne(users, { email: req.body.email }, (err, doc) => {
                             if (doc) resolve({ action: "register", success: false, message: "There is a user with the same email" })
                             else {
-                                let user = { login: req.body.login, password: req.body.password, email: req.body.email }
+                                let user = { login: req.body.login, password: req.body.password, email: req.body.email, friendsList: [] }
                                 Database.Insert(users, user, (err, newDoc) => {
                                     if (!err) {
                                         delete newDoc.password;
@@ -89,8 +87,7 @@ module.exports = {
     GetFriendsList: function (req, users) {
         return new Promise(resolve => {
             if (this.CheckUser(req)) {
-                // to improve -> just sending friends, not all of them
-                Database.Select(users, { $not: {login: this.GetSession(req, 'user').login} }, (err, docs) => {
+                Database.Select(users, { friendsList: this.GetSession(req, 'user')._id} , (err, docs) => {
                     if (err) resolve({ action: 'getFriendsList', success: false })
                     else {
                         // deleting fields -> to improve -> add name, surname and avatar (in registration)
@@ -98,10 +95,23 @@ module.exports = {
                             delete o.password;
                             delete o.email;
                         })
-                        
                         resolve({ action: 'getFriendsList', success: true, users: docs })
                     }
-                })
+                });
+
+                // for all users, wothout friends
+                // Database.Select(users, { $not: {login: this.GetSession(req, 'user').login} }, (err, docs) => {
+                //     if (err) resolve({ action: 'getFriendsList', success: false })
+                //     else {
+                //         // deleting fields -> to improve -> add name, surname and avatar (in registration)
+                //         docs.forEach(o => {
+                //             delete o.password;
+                //             delete o.email;
+                //         })
+                        
+                //         resolve({ action: 'getFriendsList', success: true, users: docs })
+                //     }
+                // })
             }
         })
     },
@@ -109,7 +119,7 @@ module.exports = {
     GetMessages: function(req, receiverID, messagesColl) {
         return new Promise((resolve, reject) => {
             if (this.CheckUser(req)) {
-                Database.Select(messagesColl, { $or:  [{ senderID: this.GetSession(req, 'user')._id, receiverID: receiverID }, {senderID: receiverID, receiverID: this.GetSession(req, 'user')._id}]}, (err, docs) => {
+                Database.SelectAndLimit(messagesColl, { $or:  [{ senderID: this.GetSession(req, 'user')._id, receiverID: receiverID }, {senderID: receiverID, receiverID: this.GetSession(req, 'user')._id}]}, { time: -1 }, 20, (err, docs) => {
                     if (err) {
                         reject({ success: false })
                     } else {

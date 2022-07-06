@@ -1,19 +1,25 @@
 module.exports = {
   // Insert
   Insert: function (coll, data, callback) {
-    console.log("- INSERT -")
+    // console.log("- INSERT -")
     coll.insert(data, (err, doc) => callback(err, doc))
   },
 
   // Select one record
   SelectOne: function (coll, data, callback) {
-    console.log("- SELECT -")
+    // console.log("- SELECT -")
     coll.findOne(data, (err, doc) => callback(err, doc))
   },
 
   Select: function (coll, data, callback) {
     coll.find(data, (err, docs) => callback(err, docs))
   },
+
+  SelectAndLimit: function (coll, data, sortObj, numberOfRows, callback) {
+    // made especially for receiving messages
+    coll.find(data).sort(sortObj).limit(numberOfRows).exec((err, docs) => callback(err, docs));
+  },
+
 }
 
 /*
