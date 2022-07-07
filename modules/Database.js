@@ -20,6 +20,9 @@ module.exports = {
     coll.find(data).sort(sortObj).limit(numberOfRows).exec((err, docs) => callback(err, docs));
   },
 
+  Update: function(coll, conditions, data, callback) {
+    coll.udpate( {conditions}, { $set: data }, { multi: true }, (err, docs) => callback(err, docs) )
+  },
 }
 
 /*

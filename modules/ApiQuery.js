@@ -87,7 +87,7 @@ module.exports = {
     GetFriendsList: function (req, users) {
         return new Promise(resolve => {
             if (this.CheckUser(req)) {
-                Database.Select(users, { friendsList: this.GetSession(req, 'user')._id} , (err, docs) => {
+                Database.Select(users, { friendsList: this.GetSession(req, 'user')._id }, (err, docs) => {
                     if (err) resolve({ action: 'getFriendsList', success: false })
                     else {
                         // deleting fields -> to improve -> add name, surname and avatar (in registration)
@@ -108,7 +108,7 @@ module.exports = {
                 //             delete o.password;
                 //             delete o.email;
                 //         })
-                        
+
                 //         resolve({ action: 'getFriendsList', success: true, users: docs })
                 //     }
                 // })
@@ -116,10 +116,36 @@ module.exports = {
         })
     },
 
-    GetMessages: function(req, receiverID, messagesColl) {
+    MakeFriends: function (req, addOrDelete, users) {
+        // addOrDelete - true: add; false: delete
         return new Promise((resolve, reject) => {
             if (this.CheckUser(req)) {
-                Database.SelectAndLimit(messagesColl, { $or:  [{ senderID: this.GetSession(req, 'user')._id, receiverID: receiverID }, {senderID: receiverID, receiverID: this.GetSession(req, 'user')._id}]}, { time: -1 }, 20, (err, docs) => {
+                Database.SelectOne(users, { _id: this.GetSession(req, "_id") }, (err, doc) => {
+                    // console.log(doc.friendsList);
+                    if (addOrDelete) { // making friends
+                        if (doc.friendsList.indexOf(req.body.userID) == -1) {
+                            doc.friendsList.push(req.body.userID)
+                            Database.Update(users, { _id: this.GetSession(req, "_id") }, { friendsList: doc.friendsList }, (err, numUpdated) => {
+                                resolve({ success: true, updatedRows: numUpdated });
+                            })
+                        }
+                    } else { // deleting friends
+                        if (doc.friendsList.indexOf(req.body.userID) != -1) {
+                            doc.friendsList.splice(doc.friendsList.indexOf(req.body.userID), 1);
+                            Database.Update(users, { _id: this.GetSession(req, "_id") }, { friendsList: doc.friendsList }, (err, numUpdated) => {
+                                resolve({ success: true, updatedRows: numUpdated });
+                            })
+                        }
+                    }
+                })
+            }
+        })
+    },
+
+    GetMessages: function (req, receiverID, messagesColl) {
+        return new Promise((resolve, reject) => {
+            if (this.CheckUser(req)) {
+                Database.SelectAndLimit(messagesColl, { $or: [{ senderID: this.GetSession(req, 'user')._id, receiverID: receiverID }, { senderID: receiverID, receiverID: this.GetSession(req, 'user')._id }] }, { time: -1 }, 20, (err, docs) => {
                     if (err) {
                         reject({ success: false })
                     } else {
@@ -127,7 +153,7 @@ module.exports = {
                             delete o.receiverID
                         })
                         docs.sort((a, b) => a.time - b.time)
-                        resolve({action: 'getMessage', success: true, messages: docs})
+                        resolve({ action: 'getMessage', success: true, messages: docs })
                     }
                 })
             } else {
