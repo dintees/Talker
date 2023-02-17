@@ -1,0 +1,106 @@
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+#usersList {
+    flex: 1;
+    background-color: rgb(22, 42, 120);
+}
+
+#messagesContainer {
+    padding: 14px;
+    flex: 5;
+    background-color: #ddd;
+}
+
+#messagesContainer #messagesBox {
+    height: 70vh;
+    background-color: #e8e8e8;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+#messagesContainer .messageBox {
+    clear: both;
+    margin-top: 3px;
+    background-color: rgb(22, 42, 120);
+    color: #eee;
+    padding: 8px 14px;
+    max-width: 70%;
+    border-radius: 20px;
+}
+
+#messagesContainer .messageForm {
+    display: block;
+    width: 90%;
+    margin: 10px auto;
+}
+
+#messagesContainer .selectedUser {
+    font-weight: bold;
+    padding-left: 20px;
+    border-bottom: 1px solid #888;
+    margin-bottom: 10px;
+}
+
+#messagesContainer input {
+    display: inline-block;
+    width: 90%;
+    padding: 10px;
+    height: 36px;
+    margin-right: 4px;
+    border: 1px solid #555;
+}
+
+#messagesContainer button {
+    /* width: 5%; */
+    padding: 6px;
+}
+
+.userBox {
+    width: 100%;
+    cursor: pointer;
+    border-bottom: 1px solid rgb(57, 80, 172);
+    color: #eee;
+    padding: 8px;
+    transition: all ease-in-out .15s;
+}
+
+.userBox:hover {
+    background-color: rgb(34, 62, 176);
+    transition: all ease-in-out .15s;
+}
+
+.userBox .userBox-name {
+    font-weight: bold;
+}
+
+.userBox .userBox-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.userBox-status {
+    font-style: italic;
+    font-size: 13px;
+}
+
+.userBox-status-circle {
+    margin-left: 6px;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 30px;
+}
+
+.userBox-newMessage {
+    background-color: #ff2323;
+    font-size: 12px;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+}

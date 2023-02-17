@@ -1,0 +1,93 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#loginForm {
+  position: absolute;
+  width: 400px;
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+  padding: 50px 35px;
+  z-index: 2;
+}
+
+header {
+  position: relative;
+  top: 40px;
+  color: rgb(159, 210, 185);
+  font-size: 50px;
+  font-family: Consolas, 'Courier New', Courier, monospace;
+  z-index: 2;
+  text-align: center;
+}
+
+#loginForm input {
+  display: block;
+  height: 50px;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 0 10px;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 300;
+  color: #fff;
+  outline: none;
+  border: none;
+}
+
+#loginForm button {
+  margin-top: 40px;
+  width: 100%;
+  background-color: transparent;
+  color: #ddd;
+  padding: 15px 0;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  transition: all ease-in-out .15s;
+}
+
+#loginForm button:hover {
+  background-color: #ddd;
+  color: #222;
+  transition: all ease-in-out .15s;
+}
+
+::placeholder {
+  color: #e5e5e5;
+}
+
+#loginFormBackground {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: rgb(40, 37, 43);
+  z-index: 1;
+}
